@@ -2,7 +2,7 @@ import numpy as np
 Ns = [100]
 selcoefs = 10**np.linspace(-3, -1, 3)
 rbps = 10**np.linspace(-8, -7, 2)
-nreps = np.arange(40)
+nreps = np.arange(20)
 
 sim_results_pattern = "sim_{N}N_{selcoef}s_{rbp}rbp_{rep}rep.tsv"
 
@@ -12,7 +12,7 @@ sim_results = expand(sim_results_pattern,
 
 rule all:
   input:
-    sim_results
+    "recurrent_sweeps.pdf"
 
 rule sims:
   input:
@@ -21,4 +21,16 @@ rule sims:
   shell:
     ("slim -d s={wildcards.selcoef} -d rbp={wildcards.rbp} " + 
     "-d N={wildcards.N} -d rep={wildcards.rep} sim.slim")
-  
+ 
+rule plot:
+  input:
+    sim_results
+  output:
+    "recurrent_sweeps.pdf"
+  shell:
+    "Rscript process_sims.r"
+
+rule clean:
+  shell:
+    "rm -f {sim_results}"
+    "rm -f recurrent_sweeps.pdf"

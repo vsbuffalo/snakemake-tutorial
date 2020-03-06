@@ -33,10 +33,15 @@ d <- tibble(sims = sims) %>%
 
 
 ds <- d %>% 
-        mutate(bins = bin_region(pos, 100, 50e6),
+        mutate(bins = bin_region(pos, 140, 50e6),
                midpoint = midpoint(bins)) %>%
+        mutate(s = as.factor(s)) %>%
         group_by(N, s, rbp, midpoint) %>%
         summarize(het = mean(het))
 
-ggplot(ds, aes(midpoint, het, color=as.factor(s)))  + geom_point() + 
-  facet_wrap(~ rbp)  + geom_smooth()
+p <- ggplot(ds, aes(midpoint, het, color=s))  + geom_point() + 
+             facet_wrap(~ rbp)  + geom_smooth(se=FALSE, span=0.5) + 
+             ylab("average heterozygosity") + xlab("position")
+      
+
+ggsave('recurrent_sweeps.pdf', p, width = 7, height = 4)
