@@ -1,0 +1,14 @@
+import numpy as np
+Ns = [100]
+selcoefs = 10**np.linspace(-3, -1, 3)
+rbps = 10**np.linspace(-8, -7, 2)
+nreps = np.arange(20)
+
+sim_results_pattern = "sim_{N}N_{selcoef}s_{rbp}rbp_{rep}rep.tsv"
+
+sim_results = expand(sim_results_pattern, 
+                     N=Ns, selcoef=selcoefs, 
+                     rbp=rbps, rep=nreps)
+
+print(sim_results)
+

@@ -1,0 +1,19 @@
+rule all:
+  input:
+    "Dmel_BDGP6.28_seqlens.tsv"
+
+rule genome:
+  output: 
+    "Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa.gz"
+  shell: 
+	  "wget ftp://ftp.ensembl.org/pub/release-99/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa.gz"
+
+rule seqlens:
+  input:
+    "Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa.gz"
+  output:
+    "Dmel_BDGP6.28_seqlens.tsv"
+  shell:
+	  """bioawk -c fastx '{{print $name "\t" length($seq)}}' {input} > {output}"""
+
+

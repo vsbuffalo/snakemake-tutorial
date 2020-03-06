@@ -1,0 +1,42 @@
+initialize() {
+  initializeMutationRate(1e-7);
+  initializeMutationType("m1", 0.5, "f", 0.0);
+  initializeMutationType("m2", 0.5, "f", s);
+
+  initializeGenomicElementType("g1", m1, 1);
+  initializeGenomicElementType("g2", c(m1, m2), c(1, 1));
+  initializeGenomicElementType("g3", m1, 1);
+
+  // the rest of the whole region
+  gene_length = 10000;
+  initializeGenomicElement(g1, 0, 25e+6 - gene_length - 1);
+  initializeGenomicElement(g3, 25e+6 + gene_length, 50e6 - 1);
+
+  // a genic region
+  initializeGenomicElement(g2, 25e+6 - gene_length, 25e+6 + gene_length - 1);
+  initializeRecombinationRate(rbp);
+  m1.convertToSubstitution = T;
+  m2.convertToSubstitution = T;
+
+  base_filename = ("sim_" + N + "N_" +
+                   s + "s_" + rbp + "rbp_" + 
+                   rep + "rep.tsv");
+  defineConstant("filename", base_filename);
+ 
+}
+
+1 early() {
+  sim.addSubpop("p1", N);
+  burnin = 10*N;
+  sim.rescheduleScriptBlock(s1, start=burnin, end=burnin);
+}
+ 
+s1 late() {
+  y = sim.mutationFrequencies(p1, sim.mutationsOfType(m1));
+  pos = sapply(sim.mutationsOfType(m1), "applyValue.position;");
+  het = 2*(y * (1-y));
+  writeFile(filename, "pos\thet");
+  for (i in seqAlong(pos)) {
+    writeFile(filename, pos[i] + "\t" + het[i], append=T);
+  }
+}

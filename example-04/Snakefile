@@ -1,0 +1,7 @@
+chrom_filename = "Drosophila_melanogaster.BDGP6.28.dna.chromosome.{chrom}.fa.gz"
+
+chroms = ['2L', '2R', '3L', '3R', 'X', '4']
+
+chrom_fa_files = expand(chrom_filename, chrom=chroms)
+
+print(chrom_fa_files)

@@ -1,0 +1,16 @@
+
+results = "file_{sample}.txt"
+
+all_results = expand(results, sample = [1, 2, 3])
+
+rule all:
+  input:
+    all_results
+
+rule sims:
+  input:
+  output:
+    "file_{sample_name}.txt"
+  run:
+    with open(output[0], 'w') as f:
+      f.write(f"the sample name is {wildcards.sample_name}")
